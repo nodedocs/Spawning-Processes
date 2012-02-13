@@ -1,8 +1,17 @@
 {
-    "title": "Spawning Processes",
-    "description": "How to spawn and manage a child process ",
-    "date": "Fri Aug 26 2011 03:08:50 GMT-0700 (PST)",
-    "tags": ["core", "child_process"],
-    "author": "Charlie McConnell",
-    "difficulty": 2
+	"title": "Spawning Processes",
+	"description": "Launching and controlling external processes",
+	"date": "Mon, 13 Feb 2012 14:54:38 GMT",
+	"tags": ["processes", "exec", "child processes", "spawn", "fork"],
+	"authors": [
+	  { "name": "Josh Holbrook",
+		  "email": "josh.holbrook@gmail.com",
+		  "url": "https://github.com/jesusabdullah"
+    },
+    { "name": "Pedro Teixeira",
+		  "email": "pedro.teixeira@gmail.com",
+		  "url": "https://github.com/pgte"
+    }
+	],
+	"difficulty": 3
 }

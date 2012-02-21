@@ -12,5 +12,8 @@
 		  "url": "https://github.com/pgte"
     }
 	],
-	"difficulty": 3
+	"difficulty": 5,
+  "categories": [
+    "Processes"
+  ]
 }

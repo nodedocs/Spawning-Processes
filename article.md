@@ -6,22 +6,24 @@ If you find yourself wishing you could have your Node.js process start another p
 
 The simplest way is the "fire, forget, and buffer" method using `child_process.exec`.  It runs your process, buffers its output (up to a default maximum of 200kb), and lets you access it from a callback when it is finished. Let us take a look at an example:
 
-		var childProcess = require('child_process'),
-		   ls;
+```javascript
+var childProcess = require('child_process'),
+   ls;
 
-		ls = childProcess.exec('ls -l', function (error, stdout, stderr) {
-		 if (error) {
-		   console.log(error.stack);
-		   console.log('Error code: '+error.code);
-		   console.log('Signal received: '+error.signal);
-		 }
-		 console.log('Child Process STDOUT: '+stdout);
-		 console.log('Child Process STDERR: '+stderr);
-		});
+ls = childProcess.exec('ls -l', function (error, stdout, stderr) {
+  if (error) {
+    console.log(error.stack);
+    console.log('Error code: '+error.code);
+    console.log('Signal received: '+error.signal);
+  }
+  console.log('Child Process STDOUT: '+stdout);
+  console.log('Child Process STDERR: '+stderr);
+});
 
-		ls.on('exit', function (code) {
-		 console.log('Child process exited with exit code '+code);
-		});
+ls.on('exit', function (code) {
+  console.log('Child process exited with exit code '+code);
+});
+```
 
 NODE PRO TIP: `error.stack` is a stack trace to the point that the Error object was created.
 
@@ -41,52 +43,64 @@ A simple example of such a process would be a UNIX `tail` command, that watches 
 
 Here is how you would do it in Node:
 
-    var spawn = require('child_process').spawn;
+```javascript
+var spawn = require('child_process').spawn;
 
-    var tail = spawn('tail', ['-f', '/var/log/system.log']);
-    
+var tail = spawn('tail', ['-f', '/var/log/system.log']);
+```
+
 This simply launches the process, but you have no interaction with it. Here is how you could observe the process standard output stream:
 
-    tail.stdout.setEncoding('utf8');
+```javascript
+tail.stdout.setEncoding('utf8');
 
-    tail.stdout.on('data', function(data) {
-      console.log('tail output:', data);
-    });
+tail.stdout.on('data', function(data) {
+  console.log('tail output:', data);
+});
+```
 
 You can also kill it, for instance, after a minute has gone by:
 
-    setTimeout(function() {
-      tail.kill();
-    }, 60000);
+```javascript
+setTimeout(function() {
+  tail.kill();
+}, 60000);
+```
 
 And be notified that the child process has died:
 
-    tail.on('exit', function(code, signal) {
-      console.log('child process has died. Exit code;', code, ', signal:', signal);
-    });
+```javascript
+tail.on('exit', function(code, signal) {
+  console.log('child process has died. Exit code;', code, ', signal:', signal);
+});
+```
 
 ## Forking other Node processes
 
 Besides spawning external commands you may be wanting to spawn new Node processes. You can do that with `child_process.fork()`, which also lets you establish a framed communication channel with that process. You just have to provide it with the main module path like this:
 
-    var fork = require('child_process').fork;
+```javascript
+var fork = require('child_process').fork;
 
-	var child = fork(__dirname + '/child.js');
+var child = fork(__dirname + '/child.js');
 
-	child.on('message', function(message) {
-	  console.log('got message from child:', message);
-	});
+child.on('message', function(message) {
+  console.log('got message from child:', message);
+});
 
-	child.send('Hello there!');
+child.send('Hello there!');
+```
     
 This script is launching a child process from the module `child.js` from the current working directory.
 
 On the child side, the process can receive messages by listening to the "message" event emitted by the `process` object like this:
 
-    process.on('message', function(message) {
-	  console.log('got a message from master:', message.toString());
-	  process.send({foo: 1, bar: 2});
-	});
+```javascript
+process.on('message', function(message) {
+  console.log('got a message from master:', message.toString());
+  process.send({foo: 1, bar: 2});
+});
+```
 
 if you save the master script into a file named "master.js" and the child script into a file named "child.js", and then launch it by:
 
